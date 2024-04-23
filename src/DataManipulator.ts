@@ -11,14 +11,23 @@ export interface Row {
 }
 
 export class DataManipulator {
+  private static priceABCWindow: number[] = [];
+  private static priceDEFWindow: number[] = [];
+
   static generateRow(serverRespond: ServerRespond[]) {
     const priceABC =
       (serverRespond[0].top_ask.price + serverRespond[0].top_bid.price) / 2;
     const priceDEF =
       (serverRespond[1].top_ask.price + serverRespond[1].top_bid.price) / 2;
+      this.updatePriceWindows(serverRespond);
+
+    // Calculate 12-month average
+    const avgPriceABC = this.calculateAverage(this.priceABCWindow);
+    const avgPriceDEF = this.calculateAverage(this.priceDEFWindow);
+    const avgRatio = avgPriceABC / avgPriceDEF;
     const ratio = priceABC / priceDEF;
-    const upperBound = 1 + 0.05;
-    const lowerBound = 1 - 0.05;
+    const upperBound = avgRatio + 0.10;
+    const lowerBound = avgRatio - 0.10;
 
     return {
       price_abc: priceABC,
@@ -30,10 +39,29 @@ export class DataManipulator {
           : serverRespond[1].timestamp,
       upper_bound: upperBound,
       lower_bound: lowerBound,
-      trigger_alert:
-        ratio > upperBound || ratio < upperBound ? ratio : undefined,
+      trigger_alert: (ratio > upperBound || ratio < lowerBound) ? ratio : undefined,
     };
   }
+  private static updatePriceWindows(serverRespond: ServerRespond[]) {
+    this.priceABCWindow.unshift(
+      (serverRespond[0].top_ask.price + serverRespond[0].top_bid.price) / 2
+    );
+    this.priceDEFWindow.unshift(
+      (serverRespond[1].top_ask.price + serverRespond[1].top_bid.price) / 2
+    );
+
+    if (this.priceABCWindow.length > 12) {
+      this.priceABCWindow.pop(); 
+    }
+    if (this.priceDEFWindow.length > 12) {
+      this.priceDEFWindow.pop(); 
+    }
+  }
+
+  private static calculateAverage(window: number[]): number {
+    return window.reduce((sum, val) => sum + val, 0) / window.length;
+  }
+
 }
 
 /*

@@ -73,3 +73,20 @@ class Graph extends Component<IProps, {}> {
 }
 
 export default Graph;
+
+/*Author Bhavitha M 
+ The Graph component now renders the following things
+ - The ratio between the prices of the stocks abc and def
+ - The upper bound 
+ - The lower bound
+ - The timestamp on its x axis
+ and a trigger when the ratio passes the upper bound
+ or goes below the lower bound
+
+ What the traders can get from this graph now compared to just the prices of the 
+ both stocks being compared.. 
+ Now the traders can see if the ratio is more than the upper bound and lower than the 
+ lower bound along with a trigger, implying that the prices of two stocks are differed
+ by a large margin and hence they can now attempt to buy/ sell one of the stocks
+ for better profits. 
+*/

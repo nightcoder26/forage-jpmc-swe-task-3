@@ -7,7 +7,7 @@ export interface Row {
   timestamp: Date;
   lower_bound: number;
   upper_bound: number;
-  trigger: number;
+  trigger_alert: number;
 }
 
 export class DataManipulator {
@@ -30,7 +30,8 @@ export class DataManipulator {
             : serverResponds[1].timestamp,
         upper_bound: upperBound,
         lower_bound: lowerBound,
-        trigger: ratio > upperBound || ratio < upperBound ? ratio : undefined,
+        trigger_alert:
+          ratio > upperBound || ratio < upperBound ? ratio : undefined,
       };
     });
   }

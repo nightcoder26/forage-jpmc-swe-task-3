@@ -32,7 +32,7 @@ class Graph extends Component<IProps, {}> {
       timestamp: "date",
       upper_bound: "float",
       lower_bound: "float",
-      trigger: "float",
+      trigger_alert: "float",
     };
 
     if (window.perspective && window.perspective.worker()) {
@@ -45,7 +45,7 @@ class Graph extends Component<IProps, {}> {
       elem.setAttribute("row-pivots", '["timestamp"]');
       elem.setAttribute(
         "columns",
-        '["ratio","lower_bound","upper_bound", "trigger_alert" '
+        '["ratio","lower_bound","upper_bound", "trigger_alert"] '
       );
 
       elem.setAttribute(
@@ -57,7 +57,7 @@ class Graph extends Component<IProps, {}> {
           timestamp: "distinct count",
           upper_bound: "avg",
           lower_bound: "avg",
-          trigger: "avg",
+          trigger_alert: "avg",
         })
       );
     }
